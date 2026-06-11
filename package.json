@@ -1,0 +1,11 @@
+{
+  "name": "statespacegrid-io",
+  "version": "1.0.0",
+  "description": "Interactive Web App for State Space Grid Analysis",
+  "main": "ssg-engine.js",
+  "scripts": {
+    "test": "node tests.js && node verify_output.js"
+  },
+  "author": "DyadicSolutions",
+  "license": "MIT"
+}
