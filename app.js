@@ -5,6 +5,7 @@
 // Global App State
 let loadedFiles = [];
 let nextColorIndex = 0;
+let currentMeasures = null;
 
 const PALETTE = [
     "hsl(140, 75%, 45%)", // Bright Green (Highlight 1)
@@ -335,7 +336,12 @@ function recalculateAndRender() {
     try {
         // 1. Calculate measures
         const measures = window.SSG.get_measures(...trajs);
+        currentMeasures = measures;
         updateMeasuresUI(measures);
+
+        // Show download buttons
+        document.getElementById("download-grid-btn").style.display = "inline-flex";
+        document.getElementById("download-measures-btn").style.display = "inline-flex";
 
         // 2. Draw SVG
         const svgString = window.SSGVisualizer.drawGridSVG(trajs, {
@@ -369,6 +375,10 @@ function updateMeasuresUI(measures) {
 }
 
 function resetMeasuresUI() {
+    currentMeasures = null;
+    document.getElementById("download-grid-btn").style.display = "none";
+    document.getElementById("download-measures-btn").style.display = "none";
+
     document.getElementById("measure-duration").innerText = "-";
     document.getElementById("measure-events").innerText = "-";
     document.getElementById("measure-visits").innerText = "-";
@@ -378,6 +388,146 @@ function resetMeasuresUI() {
     document.getElementById("measure-visit-dur").innerText = "-";
     document.getElementById("measure-state-dur").innerText = "-";
     document.getElementById("measure-dispersion").innerText = "-";
+}
+
+// Download grid visualization as SVG
+function downloadGrid() {
+    const svgEl = document.querySelector("#grid-box svg");
+    if (!svgEl) return;
+    
+    const serializer = new XMLSerializer();
+    let svgString = serializer.serializeToString(svgEl);
+    
+    if (!svgString.startsWith('<?xml')) {
+        svgString = '<?xml version="1.0" standalone="no"?>\r\n' + svgString;
+    }
+    
+    const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement("a");
+    a.href = url;
+    
+    // Get active file names
+    const activeFileNames = [];
+    loadedFiles.forEach(fileObj => {
+        if (fileObj.trajectories.some(t => t.active)) {
+            activeFileNames.push(fileObj.name.replace(/\.[^/.]+$/, ""));
+        }
+    });
+    
+    const namePrefix = activeFileNames.length > 0 ? activeFileNames.join("_") : "grid";
+    a.download = `ssg_${namePrefix}.svg`;
+    
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Download grid measures as CSV
+function downloadMeasures() {
+    // Collect active trajectories with their metadata (filename and ID)
+    const activeTrajsInfo = [];
+    loadedFiles.forEach(fileObj => {
+        fileObj.trajectories.forEach(tInfo => {
+            if (tInfo.active) {
+                activeTrajsInfo.push({
+                    name: `${fileObj.name} (ID: ${tInfo.id})`,
+                    trajectory: tInfo.trajectory
+                });
+            }
+        });
+    });
+
+    if (activeTrajsInfo.length === 0) return;
+
+    const headers = [
+        "Dataset/ID",
+        "Mean Trajectory Duration",
+        "Mean Number of Events",
+        "Mean Number of Visits",
+        "Mean State Range",
+        "Total State Range",
+        "Mean Event Duration",
+        "Mean Visit Duration",
+        "Mean State Duration",
+        "Mean Dispersion"
+    ];
+
+    const rows = [headers];
+
+    // Helper to format a measures object to CSV row values
+    function pushMeasureRow(label, m) {
+        rows.push([
+            label,
+            m.mean_trajectory_duration,
+            m.mean_number_of_events,
+            m.mean_number_of_visits,
+            m.mean_state_range,
+            m.total_state_range,
+            m.mean_event_duration,
+            m.mean_visit_duration,
+            m.mean_state_duration,
+            m.mean_dispersion
+        ]);
+    }
+
+    if (activeTrajsInfo.length === 1) {
+        // Only 1 active dataset, just compute and output its individual measures
+        const item = activeTrajsInfo[0];
+        const m = window.SSG.get_measures(item.trajectory);
+        pushMeasureRow(item.name, m);
+    } else {
+        // More than 1 active dataset: output each individually, then the cumulative one
+        activeTrajsInfo.forEach(item => {
+            const m = window.SSG.get_measures(item.trajectory);
+            pushMeasureRow(item.name, m);
+        });
+
+        // Combined / Cumulative row
+        const allTrajs = activeTrajsInfo.map(item => item.trajectory);
+        const combinedMeasures = window.SSG.get_measures(...allTrajs);
+        pushMeasureRow("Combined", combinedMeasures);
+    }
+
+    // Convert rows to CSV content
+    const csvContent = rows.map(r => r.map(val => {
+        if (typeof val === 'string' || val instanceof String) {
+            let formatted = val.replace(/"/g, '""');
+            if (formatted.includes(',') || formatted.includes('"') || formatted.includes('\n')) {
+                formatted = `"${formatted}"`;
+            }
+            return formatted;
+        }
+        if (typeof val === 'number') {
+            if (Number.isInteger(val)) return val.toString();
+            return parseFloat(val.toFixed(4)).toString();
+        }
+        return val;
+    }).join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement("a");
+    a.href = url;
+
+    // Get filename prefix
+    const activeFileNames = [];
+    loadedFiles.forEach(fileObj => {
+        if (fileObj.trajectories.some(t => t.active)) {
+            activeFileNames.push(fileObj.name.replace(/\.[^/.]+$/, ""));
+        }
+    });
+
+    const namePrefix = activeFileNames.length > 0 ? activeFileNames.join("_") : "measures";
+    a.download = `ssg_measures_${namePrefix}.csv`;
+    
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 // Test Runner Panel

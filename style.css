@@ -557,6 +557,39 @@ input:checked + .slider:before {
 
 .stat-num.pass { color: var(--color-green); }
 .stat-num.fail { color: #ef4444; }
+.btn-download {
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text-primary);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+}
+
+.btn-download:hover {
+    border-color: var(--color-green);
+    color: var(--color-green);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+    background: var(--color-green-light);
+}
+
+.btn-download svg {
+    transition: transform 0.2s ease;
+}
+
+.btn-download:hover svg {
+    transform: translateY(1px);
+}
 
 .btn-run-tests {
     background: var(--color-green);
