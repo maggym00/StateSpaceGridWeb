@@ -126,13 +126,13 @@ function drawGridSVG(trajs, options = {}) {
     const numX = xRange.length;
     const numY = yRange.length;
 
-    // Premium Theme Palette: Green & Orange first
+    // Premium Material Theme Palette
     const defaultColours = [
-        "hsl(140, 75%, 45%)", // Bright Green
-        "hsl(25, 95%, 52%)",  // Bright Orange
-        "hsl(205, 85%, 50%)", // Blue
-        "hsl(275, 75%, 55%)", // Violet
-        "hsl(5, 85%, 55%)"    // Coral
+        "rgb(70, 103, 48)",    // Primary Green
+        "rgb(56, 102, 101)",   // Tertiary Teal
+        "rgb(86, 98, 75)",     // Secondary Sage
+        "rgb(186, 26, 26)",    // Error Red
+        "rgb(172, 210, 143)"   // Light Green
     ];
 
     const activeColours = colours || trajs.map((_, i) => defaultColours[i % defaultColours.length]);
@@ -159,14 +159,14 @@ function drawGridSVG(trajs, options = {}) {
     // Add CSS inside SVG for standalone rendering
     svg += `
     <style>
-        .ssg-bg { fill: #fcfcfc; }
-        .grid-line { stroke: #e0e0e0; stroke-width: 1; }
-        .grid-border { stroke: #cccccc; stroke-width: 1.5; fill: none; }
-        .axis-text { font-family: 'Inter', system-ui, sans-serif; font-size: 13px; fill: #444444; font-weight: 500; }
-        .axis-label { font-family: 'Inter', system-ui, sans-serif; font-size: 15px; fill: #222222; font-weight: 600; }
-        .grid-title { font-family: 'Inter', system-ui, sans-serif; font-size: 18px; fill: #111111; font-weight: 700; text-anchor: middle; }
+        .ssg-bg { fill: rgb(248 250 240); }
+        .grid-line { stroke: rgb(196 200 187); stroke-width: 1; }
+        .grid-border { stroke: rgb(116 121 109); stroke-width: 1.5; fill: none; }
+        .axis-text { font-family: 'Inter', system-ui, sans-serif; font-size: 13px; fill: rgb(67 72 62); font-weight: 500; }
+        .axis-label { font-family: 'Inter', system-ui, sans-serif; font-size: 15px; fill: rgb(25 29 22); font-weight: 600; }
+        .grid-title { font-family: 'Inter', system-ui, sans-serif; font-size: 18px; fill: rgb(25 29 22); font-weight: 700; text-anchor: middle; }
         .traj-line { stroke-width: 2.5; fill: none; opacity: 0.85; stroke-linecap: round; }
-        .traj-arrow { fill: #333333; opacity: 0.9; }
+        .traj-arrow { fill: rgb(67 72 62); opacity: 0.9; }
         .visit-circle { cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; opacity: 0.8; }
         .visit-circle:hover { transform-box: fill-box; transform-origin: center; transform: scale(1.25); opacity: 1; }
     </style>`;

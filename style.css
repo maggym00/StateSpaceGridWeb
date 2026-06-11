@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root {
-    --bg-main: #f5f7fb;
-    --bg-card: rgba(255, 255, 255, 0.75);
-    --border-card: rgba(255, 255, 255, 0.4);
-    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
-    --shadow-hover: 0 12px 40px 0 rgba(31, 38, 135, 0.08);
+    --bg-main: rgb(248 250 240);
+    --bg-card: rgba(255, 255, 255, 0.8);
+    --border-card: rgb(196 200 187 / 0.5);
+    --shadow-soft: 0 8px 32px 0 rgba(70, 103, 48, 0.06);
+    --shadow-hover: 0 12px 40px 0 rgba(70, 103, 48, 0.12);
     
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --text-light: #94a3b8;
+    --text-primary: rgb(25 29 22);
+    --text-secondary: rgb(67 72 62);
+    --text-light: rgb(116 121 109);
     
-    --color-green: hsl(142, 76%, 36%);
-    --color-green-light: hsl(142, 76%, 95%);
-    --color-orange: hsl(25, 95%, 48%);
-    --color-orange-light: hsl(25, 95%, 95%);
+    --color-green: rgb(70 103 48);
+    --color-green-light: rgb(199 238 169);
+    --color-orange: rgb(56 102 101);
+    --color-orange-light: rgb(187 236 234);
     
     --accent-primary: var(--color-green);
     --accent-secondary: var(--color-orange);
@@ -33,7 +33,7 @@
 }
 
 body {
-    background: linear-gradient(135deg, #f0f4f8 0%, #f6f8fb 50%, #edf2f7 100%);
+    background: linear-gradient(135deg, rgb(248 250 240) 0%, rgb(243 245 234) 50%, rgb(237 239 228) 100%);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: var(--text-primary);
     min-height: 100vh;

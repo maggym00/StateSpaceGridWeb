@@ -8,13 +8,13 @@ let nextColorIndex = 0;
 let currentMeasures = null;
 
 const PALETTE = [
-    "hsl(140, 75%, 45%)", // Bright Green (Highlight 1)
-    "hsl(25, 95%, 52%)",  // Bright Orange (Highlight 2)
-    "hsl(205, 85%, 50%)", // Blue
-    "hsl(275, 75%, 55%)", // Violet
-    "hsl(5, 85%, 55%)",   // Coral
-    "hsl(180, 70%, 40%)", // Teal
-    "hsl(315, 75%, 50%)"  // Magenta
+    "rgb(70, 103, 48)",    // Primary Green
+    "rgb(56, 102, 101)",   // Tertiary Teal
+    "rgb(86, 98, 75)",     // Secondary Sage
+    "rgb(186, 26, 26)",    // Error Red
+    "rgb(172, 210, 143)",  // Light Green
+    "rgb(160, 207, 206)",  // Light Teal
+    "rgb(189, 203, 175)"   // Sage Fixed Dim
 ];
 
 // Demo Dataset (Template 2)
