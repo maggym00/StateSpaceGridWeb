@@ -14,51 +14,50 @@
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <div class="logo-section">
-                <div class="logo-icon">SS</div>
-                <div class="logo-text">
-                    <h1>State Space Grid Studio</h1>
-                    <p>Dyadic Solutions</p>
-                </div>
-            </div>
-            <nav class="nav-tabs">
-                <button class="tab-btn active" id="tab-dashboard-btn" onclick="switchTab('dashboard')">Dashboard</button>
-            </nav>
-        </div>
-    </header>
-
     <div class="main-container">
         
         <!-- Sidebar Panel -->
-        <aside class="glass-card">
-            <div class="card-title">
-                <!-- Folder Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
-                </svg>
-                Data Input
-            </div>
-            
-            <!-- Drag & Drop Zone -->
-            <div class="dropzone" id="drop-zone">
-                <div class="dropzone-icon">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0-15 6 6m-6-6-6 6" />
-                    </svg>
+        <aside class="sidebar-container">
+            <!-- Branding / Logo Box -->
+            <div class="glass-card branding-card">
+                <div class="logo-section">
+                    <div class="logo-icon">SS</div>
+                    <div class="logo-text">
+                        <h1>State Space Grid Studio</h1>
+                        <p>Dyadic Solutions</p>
+                    </div>
                 </div>
-                <h3>Drag & Drop Files</h3>
-                <p>Supports .csv, .tsv, .trj, .xlsx</p>
-                <input type="file" id="file-input" style="display: none;" accept=".csv,.tsv,.trj,.xlsx" multiple>
             </div>
 
-            <!-- Loaded Files & Trajectories List -->
-            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
-                <h4 style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Loaded Datasets</h4>
-                <div class="file-list" id="datasets-container">
-                    <div style="text-align: center; color: var(--text-light); padding: 1.5rem 0; font-size: 0.8rem;">
-                        No data loaded yet. Drag-and-drop a file to begin.
+            <!-- Data Input Box -->
+            <div class="glass-card data-input-card">
+                <div class="card-title">
+                    <!-- Folder Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+                    </svg>
+                    Data Input
+                </div>
+                
+                <!-- Drag & Drop Zone -->
+                <div class="dropzone" id="drop-zone">
+                    <div class="dropzone-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0-15 6 6m-6-6-6 6" />
+                        </svg>
+                    </div>
+                    <h3>Drag & Drop Files</h3>
+                    <p>Supports .csv, .tsv, .trj, .xlsx</p>
+                    <input type="file" id="file-input" style="display: none;" accept=".csv,.tsv,.trj,.xlsx" multiple>
+                </div>
+
+                <!-- Loaded Files & Trajectories List -->
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; flex: 1;">
+                    <h4 style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Loaded Datasets</h4>
+                    <div class="file-list" id="datasets-container">
+                        <div style="text-align: center; color: var(--text-light); padding: 1.5rem 0; font-size: 0.8rem;">
+                            No data loaded yet. Drag-and-drop a file to begin.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,7 +114,7 @@
                 <div class="vis-grid-container">
                     
                     <!-- SVG Grid Box -->
-                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="vis-column">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Grid Visualization</h3>
                             <button id="download-grid-btn" class="btn-download" onclick="downloadGrid()" style="display: none;">
@@ -134,7 +133,7 @@
                     </div>
 
                     <!-- Measures Dashboard -->
-                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="vis-column">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Grid Measures</h3>
                             <button id="download-measures-btn" class="btn-download" onclick="downloadMeasures()" style="display: none;">
