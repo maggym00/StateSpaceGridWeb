@@ -400,17 +400,20 @@ input:checked + .slider:before {
     color: var(--text-secondary);
 }
 
-.select-group select {
+.select-group select, .select-group input[type="text"] {
     padding: 0.4rem 0.6rem;
     border-radius: var(--radius-sm);
     border: 1px solid #cbd5e1;
     background: white;
     font-size: 0.8rem;
     outline: none;
+}
+
+.select-group select {
     cursor: pointer;
 }
 
-.select-group select:focus {
+.select-group select:focus, .select-group input[type="text"]:focus {
     border-color: var(--color-orange);
 }
 

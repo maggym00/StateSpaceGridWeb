@@ -90,6 +90,54 @@ function detectColumns(headers) {
 function buildTrajectories(rows, mapping) {
     const { idCol, onsetCol, xCol, yCol, xRange, yRange } = mapping;
 
+    let finalXRange = xRange;
+    let finalYRange = yRange;
+
+    // Determine coordinate ranges globally if not explicitly provided
+    if (!finalXRange || finalXRange.length === 0) {
+        const xVals = [];
+        for (const row of rows) {
+            const onsetVal = row[onsetCol];
+            if (isEmpty(onsetVal) || isNaN(parseFloat(onsetVal))) continue;
+            const xVal = row[xCol];
+            const yVal = row[yCol];
+            if (!isEmpty(xVal) && !isEmpty(yVal)) {
+                const xParsed = isNaN(Number(xVal)) || xVal === "" ? xVal : Number(xVal);
+                xVals.push(xParsed);
+            }
+        }
+        if (xVals.length > 0) {
+            const unique = [...new Set(xVals)];
+            finalXRange = unique.every(x => typeof x === 'number')
+                ? unique.sort((a, b) => a - b)
+                : unique.sort();
+        } else {
+            finalXRange = [];
+        }
+    }
+
+    if (!finalYRange || finalYRange.length === 0) {
+        const yVals = [];
+        for (const row of rows) {
+            const onsetVal = row[onsetCol];
+            if (isEmpty(onsetVal) || isNaN(parseFloat(onsetVal))) continue;
+            const xVal = row[xCol];
+            const yVal = row[yCol];
+            if (!isEmpty(xVal) && !isEmpty(yVal)) {
+                const yParsed = isNaN(Number(yVal)) || yVal === "" ? yVal : Number(yVal);
+                yVals.push(yParsed);
+            }
+        }
+        if (yVals.length > 0) {
+            const unique = [...new Set(yVals)];
+            finalYRange = unique.every(y => typeof y === 'number')
+                ? unique.sort((a, b) => a - b)
+                : unique.sort();
+        } else {
+            finalYRange = [];
+        }
+    }
+
     // Group rows by ID if an ID column is used
     const groups = {};
     if (idCol && rows.some(r => !isEmpty(r[idCol]))) {
@@ -157,25 +205,6 @@ function buildTrajectories(rows, mapping) {
 
         // If we have states and times, build the Trajectory
         if (states.length > 0 && times.length === states.length + 1) {
-            // Determine coordinate ranges if not explicitly provided
-            let finalXRange = xRange;
-            let finalYRange = yRange;
-
-            if (!finalXRange || finalXRange.length === 0) {
-                // Extract unique values and sort
-                const xVals = [...new Set(states.map(s => s[0]))];
-                finalXRange = xVals.every(x => typeof x === 'number') 
-                    ? xVals.sort((a, b) => a - b)
-                    : xVals.sort();
-            }
-
-            if (!finalYRange || finalYRange.length === 0) {
-                const yVals = [...new Set(states.map(s => s[1]))];
-                finalYRange = yVals.every(y => typeof y === 'number')
-                    ? yVals.sort((a, b) => a - b)
-                    : yVals.sort();
-            }
-
             const trajectory = new (window.SSG || require('./ssg-engine.js')).Trajectory(
                 finalXRange,
                 finalYRange,

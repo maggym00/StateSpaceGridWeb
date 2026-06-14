@@ -54,6 +54,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (citationUrlEl) {
         citationUrlEl.innerText = window.location.href.split('?')[0].split('#')[0];
     }
+
+    // Attach listeners to X/Y selectors to update range suggestions
+    document.getElementById("select-x").addEventListener("change", (e) => {
+        if (pendingFile) {
+            updateRangeInputs(pendingFile.rows, e.target.value, document.getElementById("select-y").value);
+        }
+    });
+    document.getElementById("select-y").addEventListener("change", (e) => {
+        if (pendingFile) {
+            updateRangeInputs(pendingFile.rows, document.getElementById("select-x").value, e.target.value);
+        }
+    });
 });
 
 // Tab Switcher
@@ -191,21 +203,73 @@ function promptMapping(fileName, rows) {
     document.getElementById("mapping-file-name").innerText = fileName;
     document.getElementById("mapping-panel").style.display = "flex";
     
+    // Populate ranges based on detected columns
+    updateRangeInputs(rows, selX.value, selY.value);
+
     // Scroll to mapping panel
     document.getElementById("mapping-panel").scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateRangeInputs(rows, xCol, yCol) {
+    const inputX = document.getElementById("input-x-range");
+    const inputY = document.getElementById("input-y-range");
+    if (!rows || rows.length === 0) {
+        inputX.value = "";
+        inputY.value = "";
+        return;
+    }
+
+    const getColRange = (col) => {
+        if (!col) return [];
+        const vals = [];
+        for (const row of rows) {
+            const val = row[col];
+            if (val !== undefined && val !== null && String(val).trim() !== "") {
+                const parsed = isNaN(Number(val)) || String(val).trim() === "" ? String(val).trim() : Number(val);
+                vals.push(parsed);
+            }
+        }
+        const unique = [...new Set(vals)];
+        return unique.every(v => typeof v === 'number')
+            ? unique.sort((a, b) => a - b)
+            : unique.sort();
+    };
+
+    if (xCol) {
+        inputX.value = getColRange(xCol).join(",");
+    } else {
+        inputX.value = "";
+    }
+
+    if (yCol) {
+        inputY.value = getColRange(yCol).join(",");
+    } else {
+        inputY.value = "";
+    }
 }
 
 // Confirm column selections and build trajectories
 function confirmMapping() {
     if (!pendingFile) return;
 
+    const xRangeStr = document.getElementById("input-x-range").value.trim();
+    const yRangeStr = document.getElementById("input-y-range").value.trim();
+
+    const parseRangeInput = (str) => {
+        if (!str) return null;
+        return str.split(",").map(val => {
+            const trimmed = val.trim();
+            return isNaN(Number(trimmed)) || trimmed === "" ? trimmed : Number(trimmed);
+        }).filter(val => val !== "");
+    };
+
     const mapping = {
         idCol: document.getElementById("select-id").value,
         onsetCol: document.getElementById("select-onset").value,
         xCol: document.getElementById("select-x").value,
         yCol: document.getElementById("select-y").value,
-        xRange: null, // Let builder auto-detect unique range values
-        yRange: null
+        xRange: parseRangeInput(xRangeStr),
+        yRange: parseRangeInput(yRangeStr)
     };
 
     if (mapping.onsetCol === mapping.xCol || mapping.onsetCol === mapping.yCol || mapping.xCol === mapping.yCol) {
