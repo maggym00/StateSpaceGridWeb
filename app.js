@@ -48,8 +48,6 @@ let pendingFile = null;
 document.addEventListener("DOMContentLoaded", () => {
     setupDropzone();
     setupDemoButton();
-    // Auto-run tests on load to show engine health
-    triggerTestRunner();
 
     // Set citation URL dynamically
     const citationUrlEl = document.getElementById("citation-url");
@@ -66,9 +64,6 @@ function switchTab(tabName) {
     if (tabName === "dashboard") {
         document.getElementById("tab-dashboard").style.display = "flex";
         document.getElementById("tab-dashboard-btn").classList.add("active");
-    } else if (tabName === "tests") {
-        document.getElementById("tab-tests").style.display = "flex";
-        document.getElementById("tab-tests-btn").classList.add("active");
     }
 }
 
@@ -536,34 +531,3 @@ function downloadMeasures() {
     URL.revokeObjectURL(url);
 }
 
-// Test Runner Panel
-function triggerTestRunner() {
-    if (!window.SSGTests) return;
-
-    const container = document.getElementById("tests-list-container");
-    container.innerHTML = "";
-
-    const summary = window.SSGTests.runAllTests();
-
-    // Summary counters
-    document.getElementById("tests-passed").innerText = summary.passed;
-    document.getElementById("tests-failed").innerText = summary.failed;
-
-    // List out cards
-    summary.results.forEach(res => {
-        const card = document.createElement("div");
-        card.className = "test-card";
-        
-        const isPass = res.status === "PASS";
-        const badgeClass = isPass ? "pass" : "fail";
-        
-        card.innerHTML = `
-        <div class="test-info">
-            <h4>${res.name}</h4>
-            <p>${isPass ? "Engine behaves correctly according to specification." : `Failed: ${res.error}`}</p>
-        </div>
-        <span class="test-badge ${badgeClass}">${res.status}</span>`;
-        
-        container.appendChild(card);
-    });
-}

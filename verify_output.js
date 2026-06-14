@@ -1,7 +1,7 @@
 /**
  * Verification script to validate Javascript calculations against Python outputs.
- * Reads example2.csv from StateSpaceGridLib/examples/example2/example2.csv
- * and compares it to expected outputs in test_output.csv
+ * Reads the local example2.csv file
+ * and compares it to expected outputs from python tests.
  */
 
 const fs = require('fs');
@@ -20,7 +20,7 @@ function assertClose(name, actual, expected) {
 
 try {
     // 1. Read and parse example2.csv
-    const csvPath = 'C:/Users/mfh/Documents/Coding/StateSpaceGrid2/StateSpaceGridLib/examples/example2/example2.csv';
+    const csvPath = path.join(__dirname, 'example2.csv');
     if (!fs.existsSync(csvPath)) {
         console.error(`Error: example2.csv not found at ${csvPath}`);
         process.exit(1);
